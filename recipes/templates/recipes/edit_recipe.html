@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Editing {{recipe.recipe_name}}
+{% endblock %}
+
+{% block content %}
+    <section class="edit_recipe">
+        <h1>Editing "{{recipe.recipe_name}}" recipe</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Recipe Form -->
+            <h3>Recipe</h3>    
+                {{ recipe_form.as_p }} 
+            <button type="submit" name="save_recipe">Save Recipe Details</button>
+        </form>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        
+            <!-- Instruction Formset -->
+            <h3>Instructions</h3>
+            {{ instruction_formset.management_form }}
+        
+            {% for form in instruction_formset %}
+                    {{ form.as_p }} 
+                    <hr> 
+            {% endfor %}
+
+            <button type="submit" name="save_instructions">Save Instructions</button>
+        </form>
+
+         <form method="POST">
+            {% csrf_token %}
+
+            <!-- Ingredient Formset -->
+            <h3>Ingredients</h3>
+            {{ ingredient_formset.management_form }}
+
+            {% for form in ingredient_formset %}
+                {{ form.as_p }}  
+                <hr>
+            {% endfor %}
+
+            <button type="submit" name="save_ingredients">Save Ingredients</button>
+        </form>
+
+    </section>
+{% endblock %}

@@ -1,0 +1,9 @@
+db.sqlite3
+token.json
+credentials.json
+client_secret*.json
+.env
+*.pyc
+__pycache__/
+venv/
+.DS_Store

@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Bakenow: {{recipe.recipe_name}}
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="bakenow">
+            {% comment %} Display which recipe and which step is being viewed {% endcomment %}
+            <h1>
+                Baking: {{recipe.recipe_name}} <br>
+                Step: {{step |add:'1'}} of {{total_steps}}
+            </h1>
+            
+            <a href="{% url 'recipes:page' slug=recipe.slug %}">Return</a>
+
+            {% comment %} Display ingredients for this step {% endcomment %}
+            {% if related_ingredients %}
+                <h2>Ingredients for this step:</h2>
+                <ul>
+                    {% for ingredient in related_ingredients %}
+                        {{ ingredient.quantity }} {{ ingredient.uom }} {{ ingredient.name }} <br>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% comment %} Display current instruction {% endcomment %}
+            <p>{{ current_instruction.description }}</p>
+            
+            
+            {% load static %}
+            {% if current_instruction.timer %}
+                <div class="timer-container">
+                    <!-- Display the remaining time in seconds -->
+                    <p class="timer">Time remaining: <span id="time">{{ timer_time_seconds }}</span> seconds</p>
+                </div>
+
+                <!-- Container for the control buttons -->
+                <div class="buttons-container">
+                    <button id="start" class="button">Start</button>
+                    <button id="stop" class = "button">Pause</button>
+                    <button id="reset" class="button">Reset</button>
+                </div>
+
+                <!-- Audio for the alarm sound that plays when time is up -->
+                <audio id="alarmSound" src="{% static 'Alarm sound effect.mp3' %}" preload="auto"></audio>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        let timeRemaining = {{ timer_time_seconds }}; // Initialize the time remaining 
+                        let changeTime; // Variable to store the time interval
+
+                        //Retrieve timer display and control buttons
+                        const timerElement = document.getElementById('time');
+                        const startButton = document.getElementById('start');
+                        const pauseButton = document.getElementById('stop');
+                        const resetButton = document.getElementById('reset');
+
+                        // Start the timer when the "Start" button is clicked
+                        startButton.addEventListener('click', function() {
+                            clearInterval(changeTime); // Clear any existing intervals to avoid multiple timers
+                            changeTime = setInterval(updateTimer, 1000); // Start a new interval that updates every second
+                        });
+                        
+                        // Pause the timer when the "Pause" button is clicked
+                        pauseButton.addEventListener('click', function() {
+                            clearInterval(changeTime);
+                        });
+                        
+                        // Reset the timer when the "Reset" button is clicked
+                        resetButton.addEventListener('click', function() {
+                            clearInterval(changeTime); // Stop the interval
+                            timeRemaining = {{ timer_time_seconds }}; // Reset time to the original value
+                            timerElement.textContent = timeRemaining; // Update the displayed time
+                        });
+
+                        // Function to update the timer every second
+                        function updateTimer() {
+                            if (timeRemaining > 0) {
+                                timeRemaining--; // Decrease the time remaining by 1 (second)
+                                timerElement.textContent = timeRemaining; // Update the displayed time
+                            } else {
+                                clearInterval(changeTime); // Stop the timer when it reaches 0
+                                alarmSound.play(); // Play an alarm sound
+                                {% comment %} alert("Time's up!"); // Show an alert when the timer reaches zero {% endcomment %}
+                            }
+                        }
+                    });
+                </script>
+            {% endif %}
+
+            {% comment %} Buttons to go to the next/previous step {% endcomment %}
+            <div class="nextpreviousbuttons {% if step == 0 %} no-previous{% endif %} ">
+                {% if step > 0 %}
+                    <a href="{% url 'recipes:bakenow' slug=recipe.slug step=step|add:'-1' %}" class="button">PREVIOUS</a>
+                {% endif %}
+                {% if step < total_steps|add:'-1' %}
+                    <a href="{% url 'recipes:bakenow' slug=recipe.slug step=step|add:'1' %}" class="button">NEXT</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock %}

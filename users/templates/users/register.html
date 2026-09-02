@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User Registration
+{% endblock %}
+
+{% block content %}
+    <div class="form-wrapper">
+        <div class="form-container">
+            <h1>User Registration</h1>
+            {% comment %} User registration form {% endcomment %}
+            <form class="form-with-validation" action="{% url 'users:register' %}" method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    {% if field.name != "is_admin" and field.label != "Password-based authentication" %}  
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            
+                            <!-- Display field-specific error message if any -->
+                            {% if field.errors %}
+                                <p class="error-message">{{ field.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button type="submit" class="form-submit">Register</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

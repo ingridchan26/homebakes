@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Change Measuring System Preference</h2>
+    <div class="form-wrapper">
+        <div class="form-container">
+            {% comment %} Change measuring system form {% endcomment %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="form-submit">Save</button>
+            </form>
+            {% comment %} Link to change password view {% endcomment %}
+            <p>
+                <a href="{% url 'users:change_password' %}">Change Password</a>
+            </p>
+        </div>
+    </div>
+    
+{% endblock %} 

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Recipes
+{% endblock %}
+
+{% block content %}
+    <section>
+    <h1>Recipes</h1>
+    {% comment %} Form to input query to search for a recipe {% endcomment %}
+    <form method="get" action="{% url 'recipes:list' %}">
+        <input type="text" name="q" placeholder="Search recipes..." value="{{ request.GET.title }}">
+        <input class="button" type="submit" value="Search">
+    </form>
+    {% comment %} Display all recipes {% endcomment %}
+    <div class="recipe-list">
+        {% for recipe in recipes %}
+            <article class="recipe">
+                <a href = "{% url 'recipes:page' slug=recipe.slug%}">
+                    <img 
+                        class = "image"
+                        src="{{ recipe.image.url }}" 
+                        alt="{{ recipe.recipe_name }}"
+                    />
+                    <h2> {{recipe.recipe_name }}</h2>
+                </a>
+            </article>
+
+        {%endfor%}
+    </div>
+
+</section>
+{% endblock %}

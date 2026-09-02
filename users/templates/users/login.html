@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User Login
+{% endblock %}
+
+{% block content %}
+    <div class="form-wrapper">  
+        <div class="form-container">
+            {% comment %} Form to login {% endcomment %}
+            <h1>User Login</h1>
+            <form class="form-with-validation" action="{% url 'users:login' %}" method="post">
+                {% csrf_token %}
+
+                {% comment %} Username input {% endcomment %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required>
+                </div>
+                
+                <!-- Password Input -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+
+                <button type="submit" class="form-submit">Login</button>
+            </form>
+            
+            <!-- Display login error message if exists -->
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+
+            <p><a href="{% url 'users:request_password_reset' %}">Forgot Password?</a></p>
+        </div>
+    </div>
+{% endblock %}

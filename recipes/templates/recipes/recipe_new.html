@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add a new recipe
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>New Recipe</h1>
+        {% comment %} Create recipe form {% endcomment %}
+        <form class="form-with-validation" action="{% url 'recipes:new-recipe'%}" method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form}}
+            {{form1}}
+            <button class='form-submit'>Add Recipe</button>
+        </form>
+    </section>
+{% endblock %}

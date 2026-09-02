@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manage recipes
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Manage Recipes</h1>
+            <a class="button" href="{% url 'recipes:new-recipe'%}">Add recipe</a>
+            <div id="recipe-list">
+                {% for recipe in recipes %}
+                    {% comment %} Hyperlink to the recipe's page {% endcomment %}
+                    <div id="recipe-{{ recipe.slug }}" style="display: flex; align-items: center;">
+                        <a href="{% url 'recipes:edit-recipe' slug=recipe.slug %}" style="flex-grow: 1;">
+                            <h2>{{ recipe.recipe_name }}</h2>
+                        </a>
+                        {% comment %} Delete form {% endcomment %}
+                        <form onsubmit="return confirm('Are you sure?');" action="{% url 'recipes:delete-recipe' recipe.slug %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button">X</button>
+                        </form>
+                    </div>
+                    
+                {% endfor %}
+            </div>
+    </section>
+    
+
+{% endblock %}

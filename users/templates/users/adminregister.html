@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Registration
+{% endblock %}
+
+{% comment %} {% block content %}
+    <h1>Create Admin</h1>
+    <form class="form-with-validation" action="{% url 'users:adminregister' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+{% endblock %} {% endcomment %}
+
+{% block content %}
+    <div class="form-wrapper"> 
+        <div class="form-container">
+            <h1>Create Admin</h1>
+            <!-- Form for admin registration -->
+            <form class="form-with-validation" action="{% url 'users:adminregister' %}" method="post">
+                {% csrf_token %}
+                
+                <!-- Loop through form fields and render them to make them look better -->
+                {% for field in form %}
+                    {% if field.name != "is_admin" and field.label != "Password-based authentication" %}  
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            <!-- Display field-specific error message if any -->
+                            {% if field.errors %}
+                                <p class="error-message">{{ field.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button type="submit" class="form-submit">Register</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

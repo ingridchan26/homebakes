@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    admin-panel
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Admin Homepage</h1>
+        <!-- Link to the recipe management page -->
+        <a href="{% url "recipes:manage-recipes-list" %}" class="button">Manage recipes</a> 
+        <!-- Link to the admin registration page -->
+        <a href="{% url "users:adminregister" %}" class="button">Create admin</a>
+
+    </section>
+{% endblock %}

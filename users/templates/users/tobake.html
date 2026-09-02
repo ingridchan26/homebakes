@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    To Bake
+{% endblock %}
+
+{% block content %}
+<h1>Your To Bake Recipes</h1>
+    {% if tobake_recipes %}
+        {% comment %} Display all recipes in the collection with an option form them to be removed {% endcomment %}
+        {% for recipe in tobake_recipes %}
+            <div class="button-container">
+                <h2><a href = "{% url 'recipes:page' slug=recipe.slug%}">{{ recipe.recipe_name }}</a></h2> 
+                <a class="button" href="{% url 'recipes:tobake' recipe.slug %}" class="button">Remove</a>
+            </div>
+        {% endfor %}
+        
+    {% else %}
+        <h2>No recipes added...</h2>
+    {% endif %}
+{% endblock %}

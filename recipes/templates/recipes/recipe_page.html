@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{recipe.recipe_name}}
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>{{recipe.recipe_name}}</h1>
+            <div class="recipePage">
+                {% comment %} Image of the recipe {% endcomment %}
+                <img 
+                    style="float: right;"
+                    class = "image"
+                    src="{{ recipe.image.url }}" 
+                    alt="{{ recipe.recipe_name }}"    
+                />
+
+                {% comment %} Add recipe to "Favourites" or "To Bake" collection {% endcomment %}
+                <div class="button-container">
+                    {% if recipe in favourite_recipes %}
+                        <a href="{% url 'recipes:favourite' recipe.slug %}" class="button">
+                            Remove from Favourites
+                        </a>
+                    {% else %}
+                        <a href="{% url 'recipes:favourite' recipe.slug %}" class="button">
+                            Add to Favourites
+                        </a>
+                    {% endif %}
+                    {% if recipe in tobake_recipes %}
+                        <a href="{% url 'recipes:tobake' recipe.slug %}" class="button">
+                            Remove from To Bake
+                        </a>
+                    {% else %}
+                        <a href="{% url 'recipes:tobake' recipe.slug %}" class="button">
+                            Add to To Bake
+                        </a>
+                    {% endif %}
+                </div>
+                
+                {% comment %} Display ingredients {% endcomment %}
+                <h2>Ingredients</h2>
+                {% comment %} Form to input custom serving size {% endcomment %}
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="serving_size">Servings:</label>
+                    <input type="number" id="serving_size" name="serving_size" value="{{ serving_size }}" min="1">
+                    <button type="submit">Update</button>
+                </form>
+                {% comment %} CSS styling to be able to 'cross off' ingredients {% endcomment %}
+                <ul class="ingredients">
+                    {% for ingredient in ingredients %}
+                        <label>
+                            <input type="checkbox" class="checkbox"> 
+                            <span>{{ ingredient.quantity }} {{ ingredient.uom }} {{ ingredient.name }}<br></span>
+                        </label>
+                    {% endfor %}
+                </ul>
+
+                {% comment %} Display instructions {% endcomment %}
+                <h2>Instructions</h2>
+                <ol class="instructions">
+                    {% for instruction in instructions %}
+                        <li>{{ instruction.description }}</li>
+                    {% endfor %}
+                </ol>
+
+                {% comment %} "Bake now" button, brings user to the first instruction step {% endcomment %}
+                <div class="button-container">
+                    <a href="{% url 'recipes:bakenow' slug=recipe.slug step=0 %}" class="button">
+                        Bake now!
+                    </a>
+                </div>
+                
+                
+            </div>
+    </section>
+{% endblock %}
